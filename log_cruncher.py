@@ -1,5 +1,5 @@
 from multiprocessing import Process, Pool, Manager
-from os import getpid, makedirs, path, cpu_count
+from os import getpid, makedirs, cpu_count
 from time import sleep
 from errno import EEXIST
 from threading import Thread
@@ -23,6 +23,7 @@ from collections import defaultdict
 # Directories
 from pathlib import Path
 
+# Search for directories containing logs here
 target_dir = ["."]
 
 # Specify directories where logs are
@@ -148,6 +149,7 @@ def log_worker(filename, dest_queues):
     with open(filename, 'r') as log_file:
 
         # print("Worker " + str(getpid()) + " : " + filename + " : open at " + str(log_file))
+        line = "undefined"
 
         try:
             cpt = 0
@@ -171,8 +173,8 @@ def log_worker(filename, dest_queues):
                     # print("Worker " + str(os.getpid()) + " sent.")
 
                     dest_queues[r].put(s)
-        except Exception as e:
-            print("Worker " + str(getpid()) + " error : " + str(e))
+        except Exception as exception:
+            print("Worker " + str(getpid()) + " error : " + str(exception))
             print("Worker " + str(getpid()) + " : " + line)
             s = line.split()
             print("Worker " + str(getpid()) + " on " + r + " -> split : " + str(s))
@@ -182,16 +184,21 @@ def log_worker(filename, dest_queues):
     # print("Worker " + str(getpid()) + " out.")
 
 
-def file_collector(target_dir, suffix_pattern=log_file_extension):
-    files = []
+def file_collector(target_directory, suffix_pattern=log_file_extension):
+    """
+    Creates a list of all files to analyse
+    :param target_directory:
+    :param suffix_pattern:
+    :return:
+    """
 
     # print("Looking into " + directory)
-    files.append(list(Path(target_dir).glob('**/*' + suffix_pattern)))
+    files_list = [list(Path(target_directory).glob('**/*' + suffix_pattern))]
     # print("Got " + str(len(files[0])))
 
-    print("[i] Found " + str(len(files[0])) + " files.")
+    print("[i] Found " + str(len(files_list[0])) + " files.")
 
-    return files[0]
+    return files_list[0]
 
 
 def get_log_ref(filename):
@@ -222,6 +229,12 @@ def show_parameters():
 
 
 def progresser(progresser_queue, num_files):
+    """
+    Thread that prints to stdout the current state of advancement/progress.
+    :param progresser_queue:
+    :param num_files:
+    :return:
+    """
     print("Progress thread ready.")
     sleep(1)
 
@@ -242,9 +255,9 @@ if __name__ == '__main__':
         if e.errno != EEXIST:
             raise
 
-    for dir in logs_dirs:
+    for directory in logs_dirs:
 
-        print("\n[i] Working with logs in " + dir)
+        print("\n[i] Working with logs in " + directory)
 
         # Launch Selector Process
         manager_d = Manager()
@@ -252,7 +265,7 @@ if __name__ == '__main__':
 
         # Create Queues to pass lines into, as many as we have reference files
         queues = manager_d.dict()
-        ref = logs_dict[dir]
+        ref = logs_dict[directory]
         queues[ref] = manager_q.Queue()
         sel = Process(target=selector, args=(ref, queues[ref], ))
         sel.start()
@@ -262,7 +275,7 @@ if __name__ == '__main__':
         progress_queue = manager_q.Queue()
         queues["progress"] = progress_queue
 
-        files = file_collector(dir)
+        files = file_collector(directory)
         p = Thread(target=progresser, args=(progress_queue, len(files),))
         p.start()
 
