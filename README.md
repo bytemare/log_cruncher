@@ -1,7 +1,7 @@
 # log_cruncher
 Reduce big log volumes for better analysis / log correlation.
 
-During a security audit, I needed to identify how my traffic (DoS, and fuzzing, typically) was impacting the network, the targets instances, and how it may trigger the firewalls and SIEM.
+During a security audit, I needed to identify how my traffic (DoS, and fuzzing, typically) was impacting the network, the target instances, and how it may trigger the firewalls and SIEM.
 The network had high band traffic with tons of Gigabytes of logs a day. I had access to log files. What I wanted, was to see if my malicious traffic behaved differently from normal traffic, and if it triggered different logging calls.
 I did that by profiling normal and malicious behaviour, and comparing the difference.
 
