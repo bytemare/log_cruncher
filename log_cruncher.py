@@ -5,8 +5,8 @@ from errno import EEXIST
 from threading import Thread
 
 """
-SPDX-License-Identifier: GPL-3.0-or-later
-Copyright (C) 2017-2018 Bytemare <d@bytema.re>. All Rights Reserved.
+SPDX-License-Identifier: MIT
+Copyright (C) 2018-2019 Bytemare <d@bytema.re>. All Rights Reserved.
 """
 
 # For correlation coefficient
