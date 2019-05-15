@@ -1,13 +1,13 @@
+"""
+SPDX-License-Identifier: MIT
+Copyright (C) 2018-2019 Bytemare <d@bytema.re>. All Rights Reserved.
+"""
+
 from multiprocessing import Process, Pool, Manager
 from os import getpid, makedirs, cpu_count
 from time import sleep
 from errno import EEXIST
 from threading import Thread
-
-"""
-SPDX-License-Identifier: MIT
-Copyright (C) 2018-2019 Bytemare <d@bytema.re>. All Rights Reserved.
-"""
 
 # For correlation coefficient
 try:
