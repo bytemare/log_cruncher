@@ -15,4 +15,6 @@ matrix:
       before_install: choco install python
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 
-script: chmod +x log_clean.sh || ./log_clean.sh || python3 log_cruncher.py || python log_cruncher.py
+script:
+  - chmod +x log_clean.sh && ./log_clean.sh
+  - python3 log_cruncher.py || python log_cruncher.py
