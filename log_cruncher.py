@@ -196,8 +196,6 @@ def file_collector(target_directory, suffix_pattern=log_file_extension):
     files_list = [list(Path(target_directory).glob('**/*' + suffix_pattern))]
     # print("Got " + str(len(files[0])))
 
-    print("[i] Found " + str(len(files_list[0])) + " files.")
-
     return files_list[0]
 
 
@@ -223,7 +221,7 @@ def show_parameters():
 
     #  Print system parameters
     print("[i] The number of processes to be launched for gathering is " + str(len(logs_refs)), flush=True)
-    print("[i] The number of processes to crawl through logs is " + str(cpu_count()), flush=True)
+    print("[i] The number of CPUs available to crawl through logs is " + str(cpu_count()), flush=True)
     print("[i] Results will be written to " + results_dir, flush=True)
     print("[i] and will be prepended with actual datetime " + date, flush=True)
 
@@ -261,8 +259,15 @@ if __name__ == '__main__':
         if not path.isdir(directory):
             print("[ERROR] Log directory " + directory + " does not exist. Skipping.", flush=True)
             continue
+        
+        files = file_collector(directory)
+
+        if len(files) == 0:
+            print("[ERROR] No log files found in " + directory +". Skipping.", flush=True)
+            continue
 
         print("\n[i] Working with logs in " + directory, flush=True)
+        print("[i] Found " + str(len(files)) + " log files in " + directory, flush=True)
 
         # Launch Selector Process
         manager_d = Manager()
@@ -274,13 +279,12 @@ if __name__ == '__main__':
         queues[ref] = manager_q.Queue()
         sel = Process(target=selector, args=(ref, queues[ref], ))
         sel.start()
-        print("[i] Selector process launched.", flush=True)
+        print("[i] Selector process launched for " + directory, flush=True)
 
         # Collect file list and launch Progress Thread
         progress_queue = manager_q.Queue()
         queues["progress"] = progress_queue
 
-        files = file_collector(directory)
         p = Thread(target=progresser, args=(progress_queue, len(files),))
         p.start()
 
