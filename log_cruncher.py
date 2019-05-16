@@ -4,7 +4,7 @@ Copyright (C) 2018-2019 Bytemare <d@bytema.re>. All Rights Reserved.
 """
 
 from multiprocessing import Process, Pool, Manager
-from os import getpid, makedirs, cpu_count
+from os import getpid, path, makedirs, cpu_count
 from time import sleep
 from errno import EEXIST
 from threading import Thread
@@ -27,7 +27,7 @@ from pathlib import Path
 target_dir = ["."]
 
 # Specify directories where logs are
-logs_dirs = ["/dir/1", "/dir/2"]
+logs_dirs = ["dir/1/", "dir/2/"]
 
 # Reference files to look for
 logs_refs = ["log_files_1", "log_files_2"]
@@ -258,7 +258,11 @@ if __name__ == '__main__':
 
     for directory in logs_dirs:
 
-        print("\n[i] Working with logs in " + directory)
+        if not path.isdir(directory):
+            print("[ERROR] Log directory " + directory + " does not exist. Skipping.", flush=True)
+            continue
+
+        print("\n[i] Working with logs in " + directory, flush=True)
 
         # Launch Selector Process
         manager_d = Manager()
@@ -270,7 +274,7 @@ if __name__ == '__main__':
         queues[ref] = manager_q.Queue()
         sel = Process(target=selector, args=(ref, queues[ref], ))
         sel.start()
-        print("[i] Selector process launched.")
+        print("[i] Selector process launched.", flush=True)
 
         # Collect file list and launch Progress Thread
         progress_queue = manager_q.Queue()
@@ -287,7 +291,7 @@ if __name__ == '__main__':
             # print("Job on " + str(i))
             workers.apply_async(log_worker, (str(f), queues))
 
-        print("[i] All " + str(workers._processes) + " worker processes launched.")
+        print("[i] All " + str(workers._processes) + " worker processes launched.", flush=True)
         workers.close()
 
         # Waiting for job termination
@@ -300,7 +304,7 @@ if __name__ == '__main__':
         progress_queue.put(stop_token)
         p.join()
 
-        print("[i] Waiting for writer to finish.")
+        print("[i] Waiting for writer to finish.", flush=True)
         sel.join()
 
     exit(0)
