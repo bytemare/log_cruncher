@@ -214,18 +214,19 @@ def get_log_ref(filename):
 
 def show_parameters():
     #  Print parameter set
-    print("[i] Looking for log files ending with " + log_file_extension)
-    print("[i] Folders to into are " + str(logs_dirs))
-    print("[i] Folders are supposed to be here : " + target_dir[0])
-    print("[i] Desired log types to look for are " + str(desired_logs))
-    print("[i] Specifically don't look for " + str(undesired_logs))
-    print("[i] The Levenshtein correlation threshold is " + str(correlation_threshold))
+    print("[i] Looking for log files ending with " + log_file_extension, flush=True)
+    print("[i] Folders to into are " + str(logs_dirs), flush=True)
+    print("[i] Folders are supposed to be here : " + target_dir[0], flush=True)
+    print("[i] Desired log types to look for are " + str(desired_logs), flush=True)
+    print("[i] Specifically don't look for " + str(undesired_logs), flush=True)
+    print("[i] The Levenshtein correlation threshold is " + str(correlation_threshold), flush=True)
 
     #  Print system parameters
-    print("[i] The number of processes to be launched for gathering is " + str(len(logs_refs)))
-    print("[i] The number of processes to crawl through logs is " + str(cpu_count()))
-    print("[i] Results will be written to " + results_dir)
-    print("[i] and will be prepended with actual datetime " + date)
+    print("[i] The number of processes to be launched for gathering is " + str(len(logs_refs)), flush=True)
+    print("[i] The number of processes to crawl through logs is " + str(cpu_count()), flush=True)
+    print("[i] Results will be written to " + results_dir, flush=True)
+    print("[i] and will be prepended with actual datetime " + date, flush=True)
+
 
 
 def progresser(progresser_queue, num_files):
