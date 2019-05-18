@@ -1,8 +1,6 @@
 language: python
 sudo: false
 
-CODECOV_TOKEN="d271959e-040e-4d5c-912c-cd3d6d6139ed"
-
 python:
   - 2.7
   - pypy
