@@ -281,10 +281,9 @@ if __name__ == '__main__':
         sel.start()
         print("[i] Selector process launched for " + directory, flush=True)
 
-        # Collect file list and launch Progress Thread
+        # Launch Progress Thread
         progress_queue = manager_q.Queue()
         queues["progress"] = progress_queue
-
         p = Thread(target=progresser, args=(progress_queue, len(files),))
         p.start()
 
