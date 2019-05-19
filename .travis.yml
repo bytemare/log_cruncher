@@ -17,7 +17,7 @@ matrix:
         - 3.8-dev
       dist: xenial
       install:
-        - pip3 install codecov
+        - pip install codecov
       after_success:
         - codecov
     - name: "Python 3.7.2 on macOS"
