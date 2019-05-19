@@ -121,8 +121,7 @@ def selector(log_ref, queue):
         # So it is really important for this else statement to be outside and juste after the for loop,
         # indented with the for.
         else:
-            # print(
-            #    msg[5] + "\n => " + str(lev) + " (added on list of " + str(len(logs[msg[1]][msg[2]])) + " elements ).")
+            # print(msg[5] + "\n => " + str(lev) + " (added on list of " + str(len(logs[msg[1]][msg[2]])) + " elements ).")
             cpt += 1
             logs[msg[1]][msg[2]].append(msg)
 
@@ -211,7 +210,7 @@ def get_log_ref(filename):
 
 
 def show_parameters():
-    #  Print parameter set
+    # Print parameter set
     print("[i] Looking for log files ending with " + log_file_extension, flush=True)
     print("[i] Folders to into are " + str(logs_dirs), flush=True)
     print("[i] Folders are supposed to be here : " + target_dir[0], flush=True)
@@ -219,7 +218,7 @@ def show_parameters():
     print("[i] Specifically don't look for " + str(undesired_logs), flush=True)
     print("[i] The Levenshtein correlation threshold is " + str(correlation_threshold), flush=True)
 
-    #  Print system parameters
+    # Print system parameters
     print("[i] The number of processes to be launched for gathering is " + str(len(logs_refs)), flush=True)
     print("[i] The number of CPUs available to crawl through logs is " + str(cpu_count()), flush=True)
     print("[i] Results will be written to " + results_dir, flush=True)
